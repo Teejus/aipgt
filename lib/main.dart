@@ -1,3 +1,4 @@
+import 'package:aiapget/http_call.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -49,13 +50,32 @@ class MyApp extends StatelessWidget {
             )
           ],
         ),
-        body: FutureBuilder(builder: (ctx, snapshot) {
-          return Container(
-            child: Column(
-              children: [Text("d")],
-            ),
-          );
-        }),
+        body: FutureBuilder(
+            future:
+                NetworkCall.getData("127.0.0.1/Textlocalhost/connection.php"),
+            builder: (ctx, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator();
+              }
+              if (snapshot.hasError) {
+                return const Center(
+                  child: Text(
+                    "SomeThing Went Wrong Try Again!",
+                  ),
+                );
+              }
+
+              return Container(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  children: [
+                    Text(
+                      snapshot.data.toString(),
+                    )
+                  ],
+                ),
+              );
+            }),
       ),
     );
   }
